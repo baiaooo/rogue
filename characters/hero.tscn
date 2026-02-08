@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://dund3rfvhpkft"]
+
+[ext_resource type="Script" uid="uid://cd80o8n67mlms" path="res://scripts/hero.gd" id="1_0cirb"]
+[ext_resource type="PackedScene" uid="uid://mpmn1aa1cgw6" path="res://characters/missile/arrow_hero.tscn" id="2_hsbtt"]
+[ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="2_t4k1q"]
+
+[sub_resource type="Gradient" id="Gradient_0vf67"]
+offsets = PackedFloat32Array(0, 0.46385542)
+colors = PackedColorArray(1, 1, 1, 0.16862746, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c8mnq"]
+gradient = SubResource("Gradient_0vf67")
+width = 50
+height = 50
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ffp7p"]
+size = Vector2(8, 8)
+
+[sub_resource type="Gradient" id="Gradient_dbfo6"]
+offsets = PackedFloat32Array(0, 0.6084337)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0vf67"]
+gradient = SubResource("Gradient_dbfo6")
+width = 500
+height = 500
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="hero" type="CharacterBody2D" unique_id=733871797]
+collision_layer = 2
+script = ExtResource("1_0cirb")
+projectile_scene = ExtResource("2_hsbtt")
+
+[node name="glow" type="Sprite2D" parent="." unique_id=1472129006]
+texture = SubResource("GradientTexture2D_c8mnq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=535937241]
+texture = ExtResource("2_t4k1q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=972472242]
+shape = SubResource("RectangleShape2D_ffp7p")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1559731886]
+texture = SubResource("GradientTexture2D_0vf67")
+height = 800.0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2005120644]
+zoom = Vector2(3, 3)
