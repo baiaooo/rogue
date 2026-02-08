@@ -2,3 +2,5 @@
 .godot/editor/editor_script_doc_cache.res
 .godot/editor/filesystem_cache10
 .godot/editor/editor_layout.cfg
+*.cfg
+/.godot/editor
