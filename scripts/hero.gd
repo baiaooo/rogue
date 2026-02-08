@@ -5,6 +5,14 @@ extends CharacterBody2D
 # =========================
 @export var controller_id: int = 1
 # =========================
+# SISTEMA DE VIDA
+# =========================
+@export var max_health: int = 100
+@export var hit_flash_duration: float = 0.1
+var health: int = 0
+var is_hit: bool = false
+var is_dead: bool = false
+# =========================
 # STATS DE MOVIMENTO
 # =========================
 const SPEED: int = 100
@@ -36,7 +44,7 @@ var original_rotation: float = 0.0
 
 func _ready() -> void:
 	add_to_group("player")
-	# Adicione aqui sua lógica de vida
+	health = max_health
 	# Salva a rotação original do sprite para o efeito wobble
 	if sprite:
 		original_rotation = sprite.rotation
@@ -175,4 +183,27 @@ func _shoot() -> void:
 	
 # E adicione a função de dano:
 func take_damage(amount: int) -> void:
-	print("Player levou ", amount, " de dano!")
+	if is_dead:
+		return
+	
+	health = max(health - amount, 0)
+	_flash_hit()
+	
+	if health <= 0:
+		_die()
+
+func _flash_hit() -> void:
+	if not sprite or is_hit:
+		return
+	
+	is_hit = true
+	sprite.modulate = Color.RED
+	await get_tree().create_timer(hit_flash_duration).timeout
+	if sprite:
+		sprite.modulate = Color.WHITE
+	is_hit = false
+
+func _die() -> void:
+	is_dead = true
+	velocity = Vector2.ZERO
+	queue_free()

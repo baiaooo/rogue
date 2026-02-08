@@ -32,6 +32,7 @@ var is_hit: bool = false
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
 
 func _ready() -> void:
+	add_to_group("enemy")
 	# Busca o player na cena (assumindo que tem o grupo "player")
 	_find_player()
 

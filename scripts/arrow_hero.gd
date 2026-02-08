@@ -67,9 +67,10 @@ func set_direction(dir: Vector2) -> void:
 # SISTEMA DE COLISÃO
 # =========================
 func _on_body_entered(body: Node2D) -> void:
-	# Adicione aqui a lógica de dano
-	# Exemplo: if body.has_method("take_damage"):
-	#              body.take_damage(10)
+	# Aplica dano ao inimigo
+	if body.is_in_group("enemy"):
+		if body.has_method("take_damage"):
+			body.take_damage(10)
 	
 	# Destroi o projétil ao colidir
 	queue_free()
