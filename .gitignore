@@ -4,3 +4,7 @@
 .godot/editor/editor_layout.cfg
 *.cfg
 /.godot/editor
+/.godot/editor
+.godot/editor/filesystem_cache10
+/.godot/editor
+/.godot
