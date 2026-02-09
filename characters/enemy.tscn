@@ -43,5 +43,13 @@ texture = ExtResource("2_dbfo6")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=972472242]
 shape = SubResource("RectangleShape2D_ffp7p")
 
+[node name="HealthBar" type="ProgressBar" parent="."]
+position = Vector2(-20, -22)
+size = Vector2(40, 6)
+min_value = 0.0
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1559731886]
 texture = SubResource("GradientTexture2D_0vf67")

@@ -40,10 +40,12 @@ var is_hit: bool = false
 
 # Referência ao sprite (ajuste o caminho se necessário)
 @onready var sprite: Node2D = $Sprite2D if has_node("Sprite2D") else null
+@onready var health_bar: ProgressBar = $HealthBar if has_node("HealthBar") else null
 
 func _ready() -> void:
 	add_to_group("player")
 	current_health = max_health
+	_update_health_bar()
 	# Salva a rotação original do sprite para o efeito wobble
 	if sprite:
 		original_rotation = sprite.rotation
@@ -182,7 +184,8 @@ func _shoot() -> void:
 	
 # E adicione a função de dano:
 func take_damage(amount: int) -> void:
-	current_health -= amount
+	current_health = clamp(current_health - amount, 0, max_health)
+	_update_health_bar()
 	_flash_hit()
 	
 	if current_health <= 0:
@@ -203,3 +206,9 @@ func _flash_hit() -> void:
 
 func _die() -> void:
 	queue_free()
+
+func _update_health_bar() -> void:
+	if not health_bar:
+		return
+	health_bar.max_value = max_health
+	health_bar.value = current_health

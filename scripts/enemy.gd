@@ -4,7 +4,8 @@ extends CharacterBody2D
 # CONFIGURAÇÕES DO INIMIGO
 # =========================
 @export var speed: float = 30.0
-@export var health: int = 100
+@export var max_health: int = 100
+var current_health: int = 100
 @export var damage: int = 10
 
 # =========================
@@ -30,9 +31,12 @@ var is_hit: bool = false
 
 # Referências aos nós
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
+@onready var health_bar: ProgressBar = $HealthBar if has_node("HealthBar") else null
 
 func _ready() -> void:
 	add_to_group("enemy")
+	current_health = max_health
+	_update_health_bar()
 	# Busca o player na cena (assumindo que tem o grupo "player")
 	_find_player()
 
@@ -126,13 +130,14 @@ func _shoot_at_player() -> void:
 # SISTEMA DE DANO
 # =========================
 func take_damage(amount: int) -> void:
-	health -= amount
+	current_health = clamp(current_health - amount, 0, max_health)
+	_update_health_bar()
 	
 	# Efeito visual de hit
 	_flash_hit()
 	
 	# Verifica se morreu
-	if health <= 0:
+	if current_health <= 0:
 		_die()
 
 func _flash_hit() -> void:
@@ -152,3 +157,9 @@ func _flash_hit() -> void:
 func _die() -> void:
 	# Adicione aqui efeitos de morte (partículas, som, etc)
 	queue_free()
+
+func _update_health_bar() -> void:
+	if not health_bar:
+		return
+	health_bar.max_value = max_health
+	health_bar.value = current_health
