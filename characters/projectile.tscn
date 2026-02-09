@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://dp35p5gq0p2k5"]
 
-[ext_resource type="Script" uid="uid://d0w1x8b7mwxg0" path="res://scripts/projectile.gd" id="1_mj0s2"]
+[ext_resource type="Script" uid="uid://duumdnst41t24" path="res://scripts/projectile.gd" id="1_mj0s2"]
 [ext_resource type="Texture2D" uid="uid://lo6ckxb4qdgy" path="res://sprites/weapons/tile228.png" id="2_o8k1h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0e1uv"]
 size = Vector2(5, 4)
 
 [node name="Projectile" type="Area2D" unique_id=905195119]
+collision_mask = 3
 script = ExtResource("1_mj0s2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=455823640]
