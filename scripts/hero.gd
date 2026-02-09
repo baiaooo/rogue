@@ -172,6 +172,11 @@ func _shoot() -> void:
 		projectile.set_direction(shoot_direction)
 	elif "direction" in projectile:
 		projectile.direction = shoot_direction
+
+	if projectile.has_method("set_team"):
+		projectile.set_team("player")
+	elif "team" in projectile:
+		projectile.team = "player"
 	
 	# Adiciona o projétil à cena
 	get_tree().current_scene.add_child(projectile)

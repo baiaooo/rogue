@@ -99,6 +99,19 @@ func _shoot_at_player() -> void:
 	
 	# Instancia o projétil
 	var projectile = enemy_projectile_scene.instantiate()
+
+	if "speed" in projectile:
+		projectile.speed = 300.0
+	if "damage" in projectile:
+		projectile.damage = 15
+	if "lifetime" in projectile:
+		projectile.lifetime = 5.0
+	if "color_1" in projectile:
+		projectile.color_1 = Color(1.0, 0.3, 0.0)
+	if "color_2" in projectile:
+		projectile.color_2 = Color(0.8, 0.0, 0.0)
+	if "color_change_speed" in projectile:
+		projectile.color_change_speed = 8.0
 	
 	# Configura a posição inicial
 	projectile.global_position = global_position
