@@ -1,13 +1,13 @@
-[gd_scene format=3 uid="uid://b626qchbu56rr"]
+[gd_scene format=3 uid="uid://dp35p5gq0p2k5"]
 
-[ext_resource type="Script" uid="uid://cvywmhkiyandn" path="res://missile_enemy.gd" id="1_xjtkr"]
-[ext_resource type="Texture2D" uid="uid://lo6ckxb4qdgy" path="res://sprites/weapons/tile228.png" id="2_0thyq"]
+[ext_resource type="Script" uid="uid://d0w1x8b7mwxg0" path="res://scripts/projectile.gd" id="1_mj0s2"]
+[ext_resource type="Texture2D" uid="uid://lo6ckxb4qdgy" path="res://sprites/weapons/tile228.png" id="2_o8k1h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0e1uv"]
 size = Vector2(5, 4)
 
-[node name="missile" type="Area2D" unique_id=905195119]
-script = ExtResource("1_xjtkr")
+[node name="Projectile" type="Area2D" unique_id=905195119]
+script = ExtResource("1_mj0s2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=455823640]
 shape = SubResource("RectangleShape2D_0e1uv")
@@ -16,4 +16,4 @@ shape = SubResource("RectangleShape2D_0e1uv")
 position = Vector2(4.7683716e-07, 0)
 rotation = 0.77216774
 scale = Vector2(0.375, 0.375)
-texture = ExtResource("2_0thyq")
+texture = ExtResource("2_o8k1h")
