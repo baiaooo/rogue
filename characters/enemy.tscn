@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://nl1eviyp2itw"]
 
 [ext_resource type="Script" uid="uid://2gpoe13rxejy" path="res://scripts/enemy.gd" id="1_nhupr"]
-[ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/missile/projectile.tscn" id="2_1ohc2"]
+[ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/projectile.tscn" id="2_1ohc2"]
 [ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="2_dbfo6"]
 
 [sub_resource type="Gradient" id="Gradient_0vf67"]

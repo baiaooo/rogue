@@ -64,7 +64,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group(team):
 		return
 
-	var target_group := team == "enemy" ? "player" : "enemy"
+	var target_group := "player" if team == "enemy" else "enemy"
 	if body.is_in_group(target_group):
 		if body.has_method("take_damage"):
 			body.take_damage(damage)
