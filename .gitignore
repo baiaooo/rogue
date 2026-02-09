@@ -1,15 +1,13 @@
-.godot/editor/filesystem_cache10
-.godot/editor/editor_script_doc_cache.res
-.godot/editor/filesystem_cache10
-.godot/editor/editor_layout.cfg
-*.cfg
-/.godot/editor
-/.godot/editor
-.godot/editor/filesystem_cache10
-/.godot/editor
-/.godot
-.godot/editor/script_editor_cache.cfg
-.godot/editor/editor_layout.cfg
-/.godot/editor
-/.godot
-.godot/editor/editor_layout.cfg
+# =========================
+# Godot (NUNCA versionar)
+# =========================
+.godot/
+.import/
+.export/
+.export_presets.cfg
+
+# =========================
+# Sistema
+# =========================
+.DS_Store
+Thumbs.db
