@@ -1,11 +1,14 @@
 extends CharacterBody2D
 
+signal died(enemy: Node, is_boss: bool)
+
 # =========================
 # CONFIGURAÇÕES DO INIMIGO
 # =========================
 @export var speed: float = 30.0
 @export var health: int = 100
 @export var damage: int = 10
+@export var is_boss: bool = false
 
 # =========================
 # CONFIGURAÇÕES DE COMBATE
@@ -164,4 +167,5 @@ func _flash_hit() -> void:
 
 func _die() -> void:
 	# Adicione aqui efeitos de morte (partículas, som, etc)
+	died.emit(self, is_boss)
 	queue_free()

@@ -1,0 +1,22 @@
+[gd_scene format=4 uid="uid://c1p0c8k2m5n2u"]
+
+[ext_resource type="Script" uid="uid://3oaqy2tu2i68q" path="res://scripts/main_menu.gd" id="1_6p3sr"]
+
+[node name="MainMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_6p3sr")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+text = "Roguelike"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBox"]
+text = "Start"

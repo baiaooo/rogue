@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="projeto roguelike"
-run/main_scene="uid://mi2vik0lk4q0"
+run/main_scene="uid://c1p0c8k2m5n2u"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/bg_color=Color(0.039215688, 0.039215688, 0.05882353, 1)
 
