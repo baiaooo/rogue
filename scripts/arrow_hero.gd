@@ -76,8 +76,3 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	else:
 		queue_free()
-
-# Opcional: Colisão com áreas
-func _on_area_entered(area: Area2D) -> void:
-	# Adicione lógica se necessário
-	queue_free()
