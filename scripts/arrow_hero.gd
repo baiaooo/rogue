@@ -5,6 +5,7 @@ extends Area2D
 # =========================
 @export var speed: float = 400.0
 @export var lifetime: float = 3.0  # Tempo antes de destruir automaticamente
+@export var damage: int = 20
 
 # =========================
 # CONFIGURAÇÕES DE COR
@@ -67,12 +68,14 @@ func set_direction(dir: Vector2) -> void:
 # SISTEMA DE COLISÃO
 # =========================
 func _on_body_entered(body: Node2D) -> void:
-	# Adicione aqui a lógica de dano
-	# Exemplo: if body.has_method("take_damage"):
-	#              body.take_damage(10)
-	
-	# Destroi o projétil ao colidir
-	queue_free()
+	if body.is_in_group("enemy"):
+		if body.has_method("take_damage"):
+			body.take_damage(damage)
+		queue_free()
+	elif body.is_in_group("player"):
+		return
+	else:
+		queue_free()
 
 # Opcional: Colisão com áreas
 func _on_area_entered(area: Area2D) -> void:

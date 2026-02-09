@@ -5,6 +5,12 @@ extends CharacterBody2D
 # =========================
 @export var controller_id: int = 1
 # =========================
+# STATS DE VIDA
+# =========================
+@export var max_health: int = 100
+@export var current_health: int = 100
+@export var hit_flash_duration: float = 0.1
+# =========================
 # STATS DE MOVIMENTO
 # =========================
 const SPEED: int = 100
@@ -30,13 +36,14 @@ var can_shoot: bool = true
 var shoot_timer: float = 0.0
 var wobble_time: float = 0.0
 var original_rotation: float = 0.0
+var is_hit: bool = false
 
 # Referência ao sprite (ajuste o caminho se necessário)
 @onready var sprite: Node2D = $Sprite2D if has_node("Sprite2D") else null
 
 func _ready() -> void:
 	add_to_group("player")
-	# Adicione aqui sua lógica de vida
+	current_health = max_health
 	# Salva a rotação original do sprite para o efeito wobble
 	if sprite:
 		original_rotation = sprite.rotation
@@ -175,4 +182,24 @@ func _shoot() -> void:
 	
 # E adicione a função de dano:
 func take_damage(amount: int) -> void:
-	print("Player levou ", amount, " de dano!")
+	current_health -= amount
+	_flash_hit()
+	
+	if current_health <= 0:
+		_die()
+
+func _flash_hit() -> void:
+	if not sprite or is_hit:
+		return
+	
+	is_hit = true
+	sprite.modulate = Color.RED
+	
+	await get_tree().create_timer(hit_flash_duration).timeout
+	
+	if sprite:
+		sprite.modulate = Color.WHITE
+	is_hit = false
+
+func _die() -> void:
+	queue_free()
