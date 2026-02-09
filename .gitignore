@@ -8,3 +8,7 @@
 .godot/editor/filesystem_cache10
 /.godot/editor
 /.godot
+.godot/editor/script_editor_cache.cfg
+.godot/editor/editor_layout.cfg
+/.godot/editor
+/.godot
