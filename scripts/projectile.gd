@@ -24,6 +24,7 @@ var color_time: float = 0.0
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
 
 func _ready() -> void:
+	# Entrou em body (inimigo/player) e área (outro projétil etc).
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_area_entered)
 
@@ -35,21 +36,15 @@ func _physics_process(delta: float) -> void:
 	position += direction * speed * delta
 	_apply_color_change(delta)
 
-# =========================
-# SISTEMA DE MUDANÇA DE COR
-# =========================
 func _apply_color_change(delta: float) -> void:
 	if not sprite:
 		return
 
 	color_time += delta * color_change_speed
-	var blend_factor = (sin(color_time) + 1.0) / 2.0
-	var current_color = color_1.lerp(color_2, blend_factor)
+	var blend_factor := (sin(color_time) + 1.0) / 2.0
+	var current_color := color_1.lerp(color_2, blend_factor)
 	sprite.modulate = current_color
 
-# =========================
-# CONFIGURAÇÃO DE DIREÇÃO/TIME
-# =========================
 func set_direction(dir: Vector2) -> void:
 	direction = dir.normalized()
 	rotation = direction.angle()
@@ -57,9 +52,6 @@ func set_direction(dir: Vector2) -> void:
 func set_team(team_name: String) -> void:
 	team = team_name
 
-# =========================
-# SISTEMA DE COLISÃO
-# =========================
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group(team):
 		return
@@ -74,4 +66,11 @@ func _on_body_entered(body: Node2D) -> void:
 	queue_free()
 
 func _on_area_entered(area: Area2D) -> void:
+	# Regra pedida: tiros do herói e dos inimigos se ignoram.
+	# Então, se colidir com outra área que também tem "team",
+	# assumimos que é projétil e não destruímos nenhum dos dois.
+	if "team" in area:
+		return
+
+	# Para outras áreas (paredes especiais, traps etc), mantém comportamento padrão.
 	queue_free()
