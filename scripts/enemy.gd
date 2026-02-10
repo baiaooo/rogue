@@ -13,15 +13,15 @@ signal died(enemy: Node, is_boss: bool)
 # =========================
 # CONFIGURAÇÕES DE COMBATE
 # =========================
-@export var enemy_projectile_scene: PackedScene  # Cena do projétil do inimigo
-@export var shoot_range: float = 100.0  # Distância mínima para atirar
-@export var shoot_cooldown: float = 1.5  # Tempo entre tiros
-@export var stop_distance: float = 50.0  # Distância para parar de se aproximar
+@export var enemy_projectile_scene: PackedScene
+@export var shoot_range: float = 100.0
+@export var shoot_cooldown: float = 1.5
+@export var stop_distance: float = 50.0
 
 # =========================
 # CONFIGURAÇÕES VISUAIS
 # =========================
-@export var hit_flash_duration: float = 0.1  # Duração do efeito de hit
+@export var hit_flash_duration: float = 0.1
 
 # =========================
 # VARIÁVEIS INTERNAS
@@ -78,9 +78,8 @@ func _chase_player(delta: float) -> void:
 	# Define a velocidade
 	velocity = direction * speed
 	
-	# Opcional: Faz o sprite olhar para o player
+	# Faz o sprite olhar para o player
 	if sprite and velocity.length() > 0:
-		# Vira o sprite baseado na direção horizontal
 		sprite.flip_h = velocity.x < 0
 
 func _find_player() -> void:
@@ -88,6 +87,21 @@ func _find_player() -> void:
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		player = players[0]
+
+# =========================
+# CONFIGURAÇÃO DE BOSS TRAIT
+# =========================
+func configure_boss_trait(trait_name: String) -> void:
+	# Modifica características do boss de acordo com o adjetivo escolhido
+	match trait_name:
+		"giant":
+			health = int(health * 1.8)
+			scale = Vector2(2.0, 2.0)
+		"fast":
+			speed *= 1.9
+		"ranger":
+			shoot_cooldown *= 0.55
+			shoot_range *= 1.45
 
 # =========================
 # SISTEMA DE DISPARO
@@ -161,11 +175,11 @@ func _flash_hit() -> void:
 	# Volta à cor normal após um tempo
 	await get_tree().create_timer(hit_flash_duration).timeout
 	
-	if sprite:  # Verifica se ainda existe
+	if sprite:
 		sprite.modulate = Color.WHITE
 	is_hit = false
 
 func _die() -> void:
-	# Adicione aqui efeitos de morte (partículas, som, etc)
+	# Emite sinal para a arena controlar drops/progresso/fases
 	died.emit(self, is_boss)
 	queue_free()

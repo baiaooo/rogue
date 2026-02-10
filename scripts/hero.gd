@@ -4,28 +4,39 @@ extends CharacterBody2D
 # VARIÁVEIS DE JOGADOR
 # =========================
 @export var controller_id: int = 1
+
 # =========================
 # STATS DE VIDA
 # =========================
 @export var max_health: int = 100
 @export var current_health: int = 100
 @export var hit_flash_duration: float = 0.1
+
 # =========================
 # STATS DE MOVIMENTO
 # =========================
-const SPEED: int = 100
-const DASH_SPEED: int = 300
-const DASH_DURATION: float = 0.2
+@export var move_speed: float = 100.0
+@export var dash_speed: float = 300.0
+@export var dash_duration: float = 0.2
+
 # =========================
 # STATS DE DISPARO
 # =========================
-@export var projectile_scene: PackedScene  # Arraste a cena do projétil aqui no Inspector
-const FIRE_RATE: float = 0.15  # Tempo entre cada tiro (em segundos)
+@export var projectile_scene: PackedScene
+@export var fire_cooldown: float = 0.15
+@export var bonus_projectile_damage: int = 0
+
+# =========================
+# STATS DE META-PROGRESSÃO
+# =========================
+@export var reroll_count: int = 0
+
 # =========================
 # VARIÁVEIS DE WOBBLE (ROTAÇÃO)
 # =========================
-const WOBBLE_SPEED: float = 10.0  # Velocidade da oscilação
-const WOBBLE_AMOUNT: float = 15.0  # Intensidade da rotação em graus
+const WOBBLE_SPEED: float = 10.0
+const WOBBLE_AMOUNT: float = 15.0
+
 # =========================
 # VARIÁVEIS INTERNAS
 # =========================
@@ -42,8 +53,10 @@ var is_hit: bool = false
 @onready var sprite: Node2D = $Sprite2D if has_node("Sprite2D") else null
 
 func _ready() -> void:
+	# Coloca o herói no grupo para outras lógicas (inimigos/projéteis/pickups)
 	add_to_group("player")
 	current_health = max_health
+	
 	# Salva a rotação original do sprite para o efeito wobble
 	if sprite:
 		original_rotation = sprite.rotation
@@ -80,7 +93,7 @@ func _process_movement(delta: float) -> void:
 		dir = dir.normalized()
 	
 	# Define a velocidade
-	velocity = dir * SPEED
+	velocity = dir * move_speed
 	
 	# Aplica o efeito wobble se estiver se movendo
 	if velocity.length() > 0:
@@ -89,7 +102,7 @@ func _process_movement(delta: float) -> void:
 		_reset_wobble()
 	
 	# Detecta input de dash
-	if Input.is_action_just_pressed("ui_accept"):  # Tecla espaço
+	if Input.is_action_just_pressed("ui_accept"):
 		_start_dash(dir if dir != Vector2.ZERO else Vector2.RIGHT)
 
 # =========================
@@ -99,7 +112,7 @@ func _start_dash(direction: Vector2) -> void:
 	# Inicia o dash na direção especificada
 	is_dashing = true
 	dash_direction = direction.normalized()
-	dash_timer = DASH_DURATION
+	dash_timer = dash_duration
 
 func _process_dash(delta: float) -> void:
 	# Atualiza o timer do dash
@@ -111,7 +124,7 @@ func _process_dash(delta: float) -> void:
 		velocity = Vector2.ZERO
 	else:
 		# Mantém a velocidade do dash
-		velocity = dash_direction * DASH_SPEED
+		velocity = dash_direction * dash_speed
 
 # =========================
 # EFEITO WOBBLE (ROTAÇÃO)
@@ -167,25 +180,59 @@ func _shoot() -> void:
 	# Configura a posição inicial do projétil
 	projectile.global_position = global_position
 	
-	# Configura a direção do projétil (assumindo que o projétil tem uma propriedade 'direction')
+	# Configura a direção do projétil
 	if projectile.has_method("set_direction"):
 		projectile.set_direction(shoot_direction)
 	elif "direction" in projectile:
 		projectile.direction = shoot_direction
 
+	# Marca o projétil como do jogador
 	if projectile.has_method("set_team"):
 		projectile.set_team("player")
 	elif "team" in projectile:
 		projectile.team = "player"
+	
+	# Aplica bônus de dano de upgrades
+	if "damage" in projectile:
+		projectile.damage += bonus_projectile_damage
 	
 	# Adiciona o projétil à cena
 	get_tree().current_scene.add_child(projectile)
 	
 	# Reseta o timer de recarga
 	can_shoot = false
-	shoot_timer = FIRE_RATE
+	shoot_timer = fire_cooldown
+
+# =========================
+# SISTEMA DE PICKUPS
+# =========================
+func add_reroll(amount: int = 1) -> void:
+	# Adiciona carga de reroll para usar na tela do boss
+	reroll_count += max(0, amount)
+
+func consume_reroll() -> bool:
+	# Gasta um reroll e retorna sucesso/falha
+	if reroll_count <= 0:
+		return false
+	reroll_count -= 1
+	return true
+
+func can_receive_heal() -> bool:
+	# Cura não pode ser coletada se estiver com vida cheia
+	return current_health < max_health
+
+func heal_percent(percent: float) -> bool:
+	# Cura percentual da vida máxima e retorna se curou de fato
+	if not can_receive_heal():
+		return false
 	
-# E adicione a função de dano:
+	var heal_amount := int(ceil(max_health * percent))
+	current_health = min(max_health, current_health + max(1, heal_amount))
+	return true
+
+# =========================
+# SISTEMA DE DANO
+# =========================
 func take_damage(amount: int) -> void:
 	current_health -= amount
 	_flash_hit()

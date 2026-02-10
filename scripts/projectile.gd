@@ -24,6 +24,8 @@ var color_time: float = 0.0
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
 
 func _ready() -> void:
+	# Coloca projéteis em grupo dedicado para ignorar colisão entre tiros
+	add_to_group("projectile")
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_area_entered)
 
@@ -61,9 +63,11 @@ func set_team(team_name: String) -> void:
 # SISTEMA DE COLISÃO
 # =========================
 func _on_body_entered(body: Node2D) -> void:
+	# Ignora qualquer coisa do mesmo time
 	if body.is_in_group(team):
 		return
 
+	# Seleciona qual grupo pode receber dano
 	var target_group := "player" if team == "enemy" else "enemy"
 	if body.is_in_group(target_group):
 		if body.has_method("take_damage"):
@@ -71,7 +75,13 @@ func _on_body_entered(body: Node2D) -> void:
 		queue_free()
 		return
 
+	# Se bateu em parede/obstáculo, destrói
 	queue_free()
 
 func _on_area_entered(area: Area2D) -> void:
+	# NOVO: tiros de herói e inimigos se ignoram, sem colidir entre si
+	if area.is_in_group("projectile"):
+		return
+
+	# Para outras áreas, mantém comportamento padrão de destruir
 	queue_free()
