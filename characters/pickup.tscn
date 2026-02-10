@@ -1,19 +1,19 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://gmt2yqce7vd0"]
 
-[ext_resource type="Script" path="res://scripts/pickup.gd" id="1_pickup"]
-[ext_resource type="Texture2D" uid="uid://lo6ckxb4qdgy" path="res://sprites/weapons/tile228.png" id="2_tex"]
+[ext_resource type="Script" uid="uid://bn6yqjl82i16g" path="res://scripts/pickup.gd" id="1_pickup"]
+[ext_resource type="Texture2D" uid="uid://c0lxn4vaanynp" path="res://sprites/critter/tile374.png" id="2_jdljv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pickup"]
 radius = 7.0
 
-[node name="Pickup" type="Area2D"]
+[node name="Pickup" type="Area2D" unique_id=517451362]
 collision_layer = 4
 collision_mask = 2
 script = ExtResource("1_pickup")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1952506341]
 shape = SubResource("CircleShape2D_pickup")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=342371396]
 scale = Vector2(0.45, 0.45)
-texture = ExtResource("2_tex")
+texture = ExtResource("2_jdljv")

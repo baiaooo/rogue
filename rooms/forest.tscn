@@ -1108,7 +1108,7 @@ physics_layer_0/collision_mask = 3
 sources/0 = SubResource("TileSetAtlasSource_3hu5c")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3hu5c"]
-size = Vector2(497, 284)
+size = Vector2(444, 233)
 
 [node name="Forest" type="Node2D" unique_id=178460378]
 script = ExtResource("5_forest")
@@ -1133,7 +1133,7 @@ monitorable = false
 [node name="Spawn - CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=817675618]
 light_mask = 0
 visibility_layer = 0
-position = Vector2(135.5, 78)
+position = Vector2(131, 72.5)
 shape = SubResource("RectangleShape2D_3hu5c")
 
 [node name="shader2" parent="." unique_id=2086316386 instance=ExtResource("1_m8knp")]
