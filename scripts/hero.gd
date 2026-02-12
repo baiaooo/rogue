@@ -11,6 +11,10 @@ extends CharacterBody2D
 @export var current_health: int = 100
 @export var hit_flash_duration: float = 0.1
 # =========================
+# STATS DE REROLL
+# =========================
+var reroll_count: int = 0
+# =========================
 # STATS DE MOVIMENTO
 # =========================
 const SPEED: int = 100
@@ -40,10 +44,12 @@ var is_hit: bool = false
 
 # Referência ao sprite (ajuste o caminho se necessário)
 @onready var sprite: Node2D = $Sprite2D if has_node("Sprite2D") else null
+@onready var health_bar: ProgressBar = $HealthBar if has_node("HealthBar") else null
 
 func _ready() -> void:
 	add_to_group("player")
 	current_health = max_health
+	_update_health_bar()
 	# Salva a rotação original do sprite para o efeito wobble
 	if sprite:
 		original_rotation = sprite.rotation
@@ -188,10 +194,23 @@ func _shoot() -> void:
 # E adicione a função de dano:
 func take_damage(amount: int) -> void:
 	current_health -= amount
+	_update_health_bar()
 	_flash_hit()
 	
 	if current_health <= 0:
 		_die()
+
+func heal(amount: int) -> void:
+	current_health = min(current_health + amount, max_health)
+	_update_health_bar()
+
+func add_reroll() -> void:
+	reroll_count += 1
+
+func _update_health_bar() -> void:
+	if health_bar:
+		health_bar.max_value = max_health
+		health_bar.value = current_health
 
 func _flash_hit() -> void:
 	if not sprite or is_hit:

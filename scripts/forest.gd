@@ -9,16 +9,17 @@ extends Node2D
 @export var boss_health_multiplier: float = 3.0
 @export var boss_damage_multiplier: float = 2.0
 @export var boss_speed_multiplier: float = 1.3
+@export var upgrade_screen_scene: PackedScene  # Arraste a cena de upgrade aqui
 
 var kill_count: int = 0
 var boss_spawned: bool = false
+var upgrade_screen: Control = null
 
 @onready var hero: Node2D = $hero
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var progress_bar: ProgressBar = $UI/BossProgress
 @onready var boss_label: Label = $UI/BossLabel
 
-# --- NOVO: referências da área de spawn ---
 @onready var spawn_area: Area2D = $Area2D
 @onready var spawn_col: CollisionShape2D = $Area2D/"Spawn - CollisionShape2D"
 
@@ -96,23 +97,15 @@ func _random_point_in_spawn_area() -> Vector2:
 		var circle := shape as CircleShape2D
 		var r: float = circle.radius
 		var ang: float = randf() * TAU
-		var rad: float = sqrt(randf()) * r
+		var rad: float = sqrt(randf()) * r # uniforme no disco
 		var local: Vector2 = Vector2(cos(ang), sin(ang)) * rad
 		return t * local
 
 	# fallback: centro da área (ou Vector2.INF se preferir)
 	return spawn_area.global_position
-
-
-	if shape is CircleShape2D:
-		var circle := shape as CircleShape2D
-		var r: float = circle.radius
-		var ang: float = randf() * TAU
-		var rad: float = sqrt(randf()) * r # uniforme no disco
-		var local: Vector2 = Vector2(cos(ang), sin(ang)) * rad
-		return t * local
 func _on_enemy_died(enemy: Node, is_boss: bool) -> void:
 	if is_boss:
+		_on_boss_defeated()
 		return
 
 	kill_count += 1
@@ -120,6 +113,57 @@ func _on_enemy_died(enemy: Node, is_boss: bool) -> void:
 
 	if kill_count >= kills_for_boss and not boss_spawned:
 		_spawn_boss()
+
+func _on_boss_defeated() -> void:
+	boss_label.text = "BOSS DERROTADO!"
+	await get_tree().create_timer(1.0).timeout
+	_show_upgrade_screen()
+
+func _show_upgrade_screen() -> void:
+	if not upgrade_screen_scene:
+		print("Upgrade screen scene não configurada!")
+		_restart_level()
+		return
+	
+	# Instancia a tela de upgrade se ainda não existe
+	if not upgrade_screen:
+		upgrade_screen = upgrade_screen_scene.instantiate()
+		add_child(upgrade_screen)
+		upgrade_screen.upgrade_selected.connect(_on_upgrade_selected)
+	
+	# Pausa o jogo
+	get_tree().paused = true
+	
+	# Mostra a tela de upgrade
+	if upgrade_screen.has_method("show_upgrades"):
+		upgrade_screen.show_upgrades(hero)
+
+func _on_upgrade_selected() -> void:
+	# Despausa o jogo
+	get_tree().paused = false
+	
+	# Aguarda um pouco e reinicia o level
+	await get_tree().create_timer(0.5).timeout
+	_restart_level()
+
+func _restart_level() -> void:
+	# Reseta variáveis
+	kill_count = 0
+	boss_spawned = false
+	progress_bar.value = 0
+	boss_label.visible = false
+	
+	# Remove todos os inimigos
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		enemy.queue_free()
+	
+	# Reinicia o spawn timer
+	spawn_timer.start()
+	
+	# Opcional: curar o herói um pouco
+	if hero and hero.has_method("heal"):
+		var heal_amount = int(hero.max_health * 0.5) if "max_health" in hero else 50
+		hero.heal(heal_amount)
 
 func _spawn_boss() -> void:
 	boss_spawned = true
@@ -144,5 +188,5 @@ func _spawn_boss() -> void:
 	if boss.has_signal("died"):
 		boss.died.connect(_on_enemy_died)
 
-	get_tree().current_scene.add_child(boss)
+	get_tree().current_scene.call_deferred("add_child", boss)
 	spawn_timer.stop()

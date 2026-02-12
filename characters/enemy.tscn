@@ -29,6 +29,12 @@ height = 100
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enemy_health_bg"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enemy_health_fill"]
+bg_color = Color(0.8, 0, 0, 1)
+
 [node name="enemy" type="CharacterBody2D" unique_id=733871797]
 collision_layer = 2
 script = ExtResource("1_nhupr")
@@ -45,3 +51,14 @@ shape = SubResource("RectangleShape2D_ffp7p")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1559731886]
 texture = SubResource("GradientTexture2D_0vf67")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -8.0
+offset_top = -12.0
+offset_right = 8.0
+offset_bottom = -10.0
+theme_override_styles/background = SubResource("StyleBoxFlat_enemy_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_enemy_health_fill")
+max_value = 100.0
+value = 100.0
+show_percentage = false

@@ -24,18 +24,29 @@ signal died(enemy: Node, is_boss: bool)
 @export var hit_flash_duration: float = 0.1  # Duração do efeito de hit
 
 # =========================
+# CONFIGURAÇÕES DE DROP
+# =========================
+@export var health_pickup_scene: PackedScene
+@export var reroll_pickup_scene: PackedScene
+@export var drop_chance: float = 0.3  # 30% de chance de dropar
+
+# =========================
 # VARIÁVEIS INTERNAS
 # =========================
 var player: CharacterBody2D = null
 var can_shoot: bool = true
 var shoot_timer: float = 0.0
 var is_hit: bool = false
+var max_health: int = 0
 
 # Referências aos nós
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
+@onready var health_bar: ProgressBar = $HealthBar if has_node("HealthBar") else null
 
 func _ready() -> void:
 	add_to_group("enemy")
+	max_health = health
+	_update_health_bar()
 	# Busca o player na cena (assumindo que tem o grupo "player")
 	_find_player()
 
@@ -143,6 +154,7 @@ func _shoot_at_player() -> void:
 # =========================
 func take_damage(amount: int) -> void:
 	health -= amount
+	_update_health_bar()
 	
 	# Efeito visual de hit
 	_flash_hit()
@@ -150,6 +162,11 @@ func take_damage(amount: int) -> void:
 	# Verifica se morreu
 	if health <= 0:
 		_die()
+
+func _update_health_bar() -> void:
+	if health_bar:
+		health_bar.max_value = max_health
+		health_bar.value = health
 
 func _flash_hit() -> void:
 	if not sprite or is_hit:
@@ -166,6 +183,24 @@ func _flash_hit() -> void:
 	is_hit = false
 
 func _die() -> void:
+	# Tenta dropar um pickup
+	_try_drop_pickup()
+	
 	# Adicione aqui efeitos de morte (partículas, som, etc)
 	died.emit(self, is_boss)
 	queue_free()
+
+func _try_drop_pickup() -> void:
+	# Verifica se deve dropar
+	if randf() > drop_chance:
+		return
+	
+	# 50% de chance de cada tipo
+	var pickup_scene = health_pickup_scene if randf() < 0.5 else reroll_pickup_scene
+	
+	if not pickup_scene:
+		return
+	
+	var pickup = pickup_scene.instantiate()
+	pickup.global_position = global_position
+	get_tree().current_scene.call_deferred("add_child", pickup)
