@@ -13,7 +13,7 @@ extends Node2D
 
 var kill_count: int = 0
 var boss_spawned: bool = false
-var upgrade_screen: Control = null
+var upgrade_screen: CanvasLayer = null
 
 @onready var hero: Node2D = $hero
 @onready var spawn_timer: Timer = $SpawnTimer
@@ -103,7 +103,7 @@ func _random_point_in_spawn_area() -> Vector2:
 
 	# fallback: centro da área (ou Vector2.INF se preferir)
 	return spawn_area.global_position
-func _on_enemy_died(enemy: Node, is_boss: bool) -> void:
+func _on_enemy_died(_enemy: Node, is_boss: bool) -> void:
 	if is_boss:
 		_on_boss_defeated()
 		return

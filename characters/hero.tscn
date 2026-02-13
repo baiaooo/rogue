@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dund3rfvhpkft"]
 
-[ext_resource type="Script" uid="uid://cd80o8n67mlms" path="res://scripts/hero.gd" id="1_0cirb"]
+[ext_resource type="Script" uid="uid://h4etgne4bnsx" path="res://scripts/hero.gd" id="1_0cirb"]
 [ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/projectile.tscn" id="2_hsbtt"]
 [ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="2_t4k1q"]
 
@@ -56,13 +56,12 @@ height = 800.0
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2005120644]
 zoom = Vector2(3, 3)
 
-[node name="HealthBar" type="ProgressBar" parent="."]
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1604473657]
 offset_left = -8.0
 offset_top = -12.0
 offset_right = 8.0
 offset_bottom = -10.0
 theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_health_fill")
-max_value = 100.0
 value = 100.0
 show_percentage = false

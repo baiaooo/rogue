@@ -15,6 +15,14 @@ extends CharacterBody2D
 # =========================
 var reroll_count: int = 0
 # =========================
+# MULTIPLICADORES DE UPGRADE
+# =========================
+var damage_multiplier: float = 1.0
+var speed_multiplier: float = 1.0
+var fire_rate_multiplier: float = 1.0
+var dash_speed_bonus: int = 0
+var dash_duration_bonus: float = 0.0
+# =========================
 # STATS DE MOVIMENTO
 # =========================
 const SPEED: int = 100
@@ -85,8 +93,8 @@ func _process_movement(delta: float) -> void:
 	if dir != Vector2.ZERO:
 		dir = dir.normalized()
 	
-	# Define a velocidade
-	velocity = dir * SPEED
+	# Define a velocidade (com multiplicador de upgrade)
+	velocity = dir * SPEED * speed_multiplier
 	
 	# Aplica o efeito wobble se estiver se movendo
 	if velocity.length() > 0:
@@ -105,7 +113,7 @@ func _start_dash(direction: Vector2) -> void:
 	# Inicia o dash na direção especificada
 	is_dashing = true
 	dash_direction = direction.normalized()
-	dash_timer = DASH_DURATION
+	dash_timer = DASH_DURATION + dash_duration_bonus
 
 func _process_dash(delta: float) -> void:
 	# Atualiza o timer do dash
@@ -116,8 +124,8 @@ func _process_dash(delta: float) -> void:
 		is_dashing = false
 		velocity = Vector2.ZERO
 	else:
-		# Mantém a velocidade do dash
-		velocity = dash_direction * DASH_SPEED
+		# Mantém a velocidade do dash (com bônus de upgrade)
+		velocity = dash_direction * (DASH_SPEED + dash_speed_bonus)
 
 # =========================
 # EFEITO WOBBLE (ROTAÇÃO)
@@ -184,12 +192,16 @@ func _shoot() -> void:
 	elif "team" in projectile:
 		projectile.team = "player"
 	
+	# Aplica multiplicador de dano
+	if "damage" in projectile:
+		projectile.damage = int(projectile.damage * damage_multiplier)
+	
 	# Adiciona o projétil à cena
 	get_tree().current_scene.add_child(projectile)
 	
-	# Reseta o timer de recarga
+	# Reseta o timer de recarga (com multiplicador de upgrade)
 	can_shoot = false
-	shoot_timer = FIRE_RATE
+	shoot_timer = FIRE_RATE * fire_rate_multiplier
 	
 # E adicione a função de dano:
 func take_damage(amount: int) -> void:

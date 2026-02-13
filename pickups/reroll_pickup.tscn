@@ -1,18 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://reroll_pickup_001"]
+[gd_scene format=3 uid="uid://pkdqhaxvgf6u"]
 
-[ext_resource type="Script" path="res://scripts/reroll_pickup.gd" id="1_reroll"]
-[ext_resource type="Texture2D" uid="uid://cqgn76uu1jj83" path="res://sprites/consumables/flask_big_yellow.png" id="2_reroll"]
+[ext_resource type="Script" uid="uid://rsm0jsm17qb0" path="res://scripts/reroll_pickup.gd" id="1_reroll"]
+[ext_resource type="Texture2D" uid="uid://di06ko1siwu52" path="res://sprites/critter/tile372.png" id="2_otmf2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_reroll"]
 radius = 8.0
 
-[node name="RerollPickup" type="Area2D"]
+[node name="RerollPickup" type="Area2D" unique_id=1713444425]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_reroll")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_reroll")
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2039189630]
+texture = ExtResource("2_otmf2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879779834]
 shape = SubResource("CircleShape2D_reroll")
