@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=4 format=3 uid="uid://dyh2s7vvkijb0"]
+
+[ext_resource type="Script" path="res://scripts/level_data.gd" id="1_1"]
+[ext_resource type="PackedScene" uid="uid://b8twnytnu7chi" path="res://characters/goblin.tscn" id="2_1"]
+[ext_resource type="PackedScene" uid="uid://nl1eviyp2itw" path="res://characters/cow.tscn" id="3_1"]
+
+[resource]
+script = ExtResource("1_1")
+level_name = "Forest"
+next_levels = Array[PackedScene]([])
+enemy_scenes = Array[PackedScene]([ExtResource("2_1"), ExtResource("3_1")])
+spawn_interval = 3.5
+max_enemies = 7
+kills_for_boss = 10
+spawn_radius = 260.0
+min_spawn_distance = 140.0
+boss_health_multiplier = 3.0
+boss_damage_multiplier = 2.0
+boss_speed_multiplier = 1.3

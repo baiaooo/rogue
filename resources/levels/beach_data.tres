@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=4 format=3 uid="uid://ce8k3vvkijb1"]
+
+[ext_resource type="Script" path="res://scripts/level_data.gd" id="1_1"]
+[ext_resource type="PackedScene" uid="uid://b8twnytnu7chi" path="res://characters/goblin.tscn" id="2_1"]
+[ext_resource type="PackedScene" uid="uid://nl1eviyp2itw" path="res://characters/cow.tscn" id="3_1"]
+
+[resource]
+script = ExtResource("1_1")
+level_name = "Beach"
+next_levels = Array[PackedScene]([])
+enemy_scenes = Array[PackedScene]([ExtResource("2_1"), ExtResource("3_1")])
+spawn_interval = 4.0
+max_enemies = 6
+kills_for_boss = 12
+spawn_radius = 280.0
+min_spawn_distance = 150.0
+boss_health_multiplier = 3.5
+boss_damage_multiplier = 2.2
+boss_speed_multiplier = 1.4

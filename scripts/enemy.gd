@@ -3,7 +3,12 @@ extends CharacterBody2D
 signal died(enemy: Node, is_boss: bool)
 
 # =========================
-# CONFIGURAÇÕES DO INIMIGO
+# DADOS DO INIMIGO (RESOURCE)
+# =========================
+@export var enemy_data: EnemyData
+
+# =========================
+# CONFIGURAÇÕES ÚNICAS DA INSTÂNCIA
 # =========================
 @export var speed: float = 30.0
 @export var health: int = 100
@@ -24,11 +29,14 @@ signal died(enemy: Node, is_boss: bool)
 @export var hit_flash_duration: float = 0.1  # Duração do efeito de hit
 
 # =========================
-# CONFIGURAÇÕES DE DROP
+# CONFIGURAÇÕES DE DROP (GLOBAIS)
 # =========================
+@export_group("Pickup Scenes")
 @export var health_pickup_scene: PackedScene
 @export var reroll_pickup_scene: PackedScene
+@export_group("")
 @export var drop_chance: float = 0.3  # 30% de chance de dropar
+@export var health_drop_chance: float = 0.5  # 50% de ser health pickup
 
 # =========================
 # VARIÁVEIS INTERNAS
@@ -44,11 +52,29 @@ var max_health: int = 0
 @onready var health_bar: ProgressBar = $HealthBar if has_node("HealthBar") else null
 
 func _ready() -> void:
+	# Carrega dados do resource se disponível
+	if enemy_data:
+		speed = enemy_data.speed
+		health = enemy_data.health
+		damage = enemy_data.damage
+		shoot_range = enemy_data.shoot_range
+		shoot_cooldown = enemy_data.shoot_cooldown
+		stop_distance = enemy_data.stop_distance
+		drop_chance = enemy_data.drop_chance
+		health_drop_chance = enemy_data.health_drop_chance
+		hit_flash_duration = enemy_data.hit_flash_duration
+	
 	add_to_group("enemy")
 	max_health = health
 	_update_health_bar()
 	# Busca o player na cena (assumindo que tem o grupo "player")
 	_find_player()
+	
+	# Carrega as cenas de pickup das configurações globais do autoload
+	if not health_pickup_scene and GameGlobals.health_pickup_scene:
+		health_pickup_scene = GameGlobals.health_pickup_scene
+	if not reroll_pickup_scene and GameGlobals.reroll_pickup_scene:
+		reroll_pickup_scene = GameGlobals.reroll_pickup_scene
 
 func _physics_process(delta: float) -> void:
 	# Atualiza o timer de tiro
@@ -195,10 +221,11 @@ func _try_drop_pickup() -> void:
 	if randf() > drop_chance:
 		return
 	
-	# 50% de chance de cada tipo
-	var pickup_scene = health_pickup_scene if randf() < 0.5 else reroll_pickup_scene
+	# Escolhe o tipo de pickup baseado na chance
+	var pickup_scene = health_pickup_scene if randf() < health_drop_chance else reroll_pickup_scene
 	
 	if not pickup_scene:
+		print("Pickup scene não configurada! Health: ", health_pickup_scene != null, " Reroll: ", reroll_pickup_scene != null)
 		return
 	
 	var pickup = pickup_scene.instantiate()

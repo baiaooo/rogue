@@ -15,6 +15,10 @@ run/main_scene="uid://c1p0c8k2m5n2u"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/bg_color=Color(0.039215688, 0.039215688, 0.05882353, 1)
 
+[autoload]
+
+GameGlobals="*res://scripts/game_globals.gd"
+
 [display]
 
 window/size/viewport_width=1280

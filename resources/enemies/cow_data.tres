@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+enemy_name = "Cow"
+speed = 25.0
+health = 120
+damage = 8
+shoot_range = 80.0
+shoot_cooldown = 2.0
+stop_distance = 40.0
+drop_chance = 0.4
+health_drop_chance = 0.7
+hit_flash_duration = 0.15
+boss_health_mult = 3.5
+boss_damage_mult = 2.2
+boss_speed_mult = 1.2
+boss_scale = 1.6

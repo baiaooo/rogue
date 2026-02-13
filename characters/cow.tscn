@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://nl1eviyp2itw"]
+
+[ext_resource type="Script" uid="uid://d13k3rc8tu7ao" path="res://scripts/enemy.gd" id="1_t8fki"]
+[ext_resource type="Resource" path="res://resources/enemies/cow_data.tres" id="2_cow"]
+[ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/projectile.tscn" id="2_t8qks"]
+[ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="3_unut8"]
+
+[sub_resource type="Gradient" id="Gradient_0vf67"]
+offsets = PackedFloat32Array(0, 0.46385542)
+colors = PackedColorArray(1, 1, 1, 0.16862746, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c8mnq"]
+gradient = SubResource("Gradient_0vf67")
+width = 50
+height = 50
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ffp7p"]
+size = Vector2(8, 8)
+
+[sub_resource type="Gradient" id="Gradient_dbfo6"]
+offsets = PackedFloat32Array(0, 0.6084337)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0vf67"]
+gradient = SubResource("Gradient_dbfo6")
+width = 100
+height = 100
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enemy_health_bg"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enemy_health_fill"]
+bg_color = Color(0.8, 0, 0, 1)
+
+[node name="enemy" type="CharacterBody2D" unique_id=733871797]
+collision_layer = 2
+script = ExtResource("1_t8fki")
+enemy_data = ExtResource("2_cow")
+enemy_projectile_scene = ExtResource("2_t8qks")
+
+[node name="glow" type="Sprite2D" parent="." unique_id=1472129006]
+texture = SubResource("GradientTexture2D_c8mnq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=535937241]
+texture = ExtResource("3_unut8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=972472242]
+shape = SubResource("RectangleShape2D_ffp7p")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1559731886]
+texture = SubResource("GradientTexture2D_0vf67")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1405729639]
+offset_left = -8.0
+offset_top = -12.0
+offset_right = 8.0
+offset_bottom = -10.0
+theme_override_styles/background = SubResource("StyleBoxFlat_enemy_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_enemy_health_fill")
+value = 100.0
+show_percentage = false

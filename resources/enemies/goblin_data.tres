@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+enemy_name = "Goblin"
+speed = 40.0
+health = 80
+damage = 12
+shoot_range = 120.0
+shoot_cooldown = 1.2
+stop_distance = 60.0
+drop_chance = 0.35
+health_drop_chance = 0.6
+hit_flash_duration = 0.1
+boss_health_mult = 2.5
+boss_damage_mult = 1.8
+boss_speed_mult = 1.4
+boss_scale = 1.5
