@@ -63,6 +63,15 @@ func _ready() -> void:
 		drop_chance = enemy_data.drop_chance
 		health_drop_chance = enemy_data.health_drop_chance
 		hit_flash_duration = enemy_data.hit_flash_duration
+		
+		# Aplica sprite se configurado
+		if enemy_data.sprite_texture and sprite:
+			sprite.texture = enemy_data.sprite_texture
+			scale = Vector2(enemy_data.enemy_size, enemy_data.enemy_size)
+		
+		# Aplica projétil se configurado
+		if enemy_data.projectile_scene:
+			enemy_projectile_scene = enemy_data.projectile_scene
 	
 	add_to_group("enemy")
 	max_health = health
@@ -88,22 +97,44 @@ func _physics_process(delta: float) -> void:
 		_find_player()
 		return
 	
-	# Calcula a distância até o player
+	# Comportamento baseado no tipo
+	var behavior_type = enemy_data.behavior if enemy_data else EnemyData.Behavior.CHASE_AND_SHOOT
+	
+	match behavior_type:
+		EnemyData.Behavior.CHASE_AND_SHOOT:
+			_behavior_chase_and_shoot(delta)
+		EnemyData.Behavior.MELEE_ONLY:
+			_behavior_melee_only(delta)
+		EnemyData.Behavior.STATIONARY_SHOOTER:
+			_behavior_stationary_shooter(delta)
+	
+	# Aplica o movimento
+	move_and_slide()
+
+func _behavior_chase_and_shoot(delta: float) -> void:
 	var distance_to_player = global_position.distance_to(player.global_position)
 	
 	# Persegue o player se estiver longe
 	if distance_to_player > stop_distance:
 		_chase_player(delta)
 	else:
-		# Para de se mover se estiver perto o suficiente
 		velocity = Vector2.ZERO
 	
 	# Atira se estiver dentro do alcance
 	if distance_to_player <= shoot_range and can_shoot:
 		_shoot_at_player()
+
+func _behavior_melee_only(delta: float) -> void:
+	# Sempre persegue, não atira
+	_chase_player(delta)
+
+func _behavior_stationary_shooter(delta: float) -> void:
+	# Fica parado, apenas atira
+	velocity = Vector2.ZERO
+	var distance_to_player = global_position.distance_to(player.global_position)
 	
-	# Aplica o movimento
-	move_and_slide()
+	if distance_to_player <= shoot_range and can_shoot:
+		_shoot_at_player()
 
 # =========================
 # SISTEMA DE PERSEGUIÇÃO

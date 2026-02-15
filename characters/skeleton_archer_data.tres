@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3 uid="uid://example_skeleton"]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_skeleton"]
+[ext_resource type="Texture2D" path="res://sprites/characters/skull.png" id="2_skull"]
+[ext_resource type="PackedScene" path="res://characters/projectile.tscn" id="3_projectile"]
+
+[resource]
+script = ExtResource("1_skeleton")
+enemy_name = "Skeleton Archer"
+speed = 0.0
+health = 80
+damage = 15
+sprite_texture = ExtResource("2_skull")
+enemy_size = 1.2
+hit_flash_duration = 0.1
+projectile_scene = ExtResource("3_projectile")
+shoot_range = 180.0
+shoot_cooldown = 2.0
+stop_distance = 50.0
+behavior = 2
+drop_chance = 0.4
+health_drop_chance = 0.5
+boss_health_mult = 3.0
+boss_damage_mult = 2.0
+boss_speed_mult = 1.0
+boss_scale = 1.5

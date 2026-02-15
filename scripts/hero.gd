@@ -238,4 +238,10 @@ func _flash_hit() -> void:
 	is_hit = false
 
 func _die() -> void:
+	# Carrega e mostra a tela de game over
+	var game_over_scene = load("res://rooms/game_over.tscn")
+	if game_over_scene:
+		var game_over = game_over_scene.instantiate()
+		get_tree().current_scene.add_child(game_over)
+		get_tree().paused = true
 	queue_free()

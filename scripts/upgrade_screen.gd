@@ -97,20 +97,29 @@ func _generate_options() -> void:
 		_create_upgrade_button(upgrade, i)
 
 func _create_upgrade_button(upgrade: Dictionary, index: int) -> void:
+	# Cria um container vertical para título + botão
+	var container = VBoxContainer.new()
+	container.add_theme_constant_override("separation", 5)
+	
+	# Adiciona o título
+	var title_label = Label.new()
+	title_label.text = upgrade.icon + " " + upgrade.name
+	title_label.add_theme_font_size_override("font_size", 22)
+	title_label.add_theme_color_override("font_color", Color(1, 0.9, 0))
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	container.add_child(title_label)
+	
+	# Cria o botão com apenas a descrição
 	var button = Button.new()
-	button.custom_minimum_size = Vector2(500, 90)
-	
-	# Texto do botão com ícone
-	var text = upgrade.icon + " " + upgrade.name + "\n" + upgrade.description
-	button.text = text
-	
-	# Estilo
-	button.add_theme_font_size_override("font_size", 18)
+	button.custom_minimum_size = Vector2(500, 70)
+	button.text = upgrade.description
+	button.add_theme_font_size_override("font_size", 16)
 	
 	# Conecta o sinal
 	button.pressed.connect(_on_upgrade_selected.bind(index))
 	
-	options_container.add_child(button)
+	container.add_child(button)
+	options_container.add_child(container)
 
 func _on_upgrade_selected(index: int) -> void:
 	if index >= current_options.size():

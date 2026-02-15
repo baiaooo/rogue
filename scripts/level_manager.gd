@@ -1,5 +1,5 @@
-extends Node2D
 class_name LevelManager
+extends Node2D
 
 # =========================
 # DADOS DA FASE (RESOURCE)
@@ -19,23 +19,31 @@ class_name LevelManager
 @export var boss_damage_multiplier: float = 2.0
 @export var boss_speed_multiplier: float = 1.3
 @export var upgrade_screen_scene: PackedScene
+@export var flag_scene: PackedScene  # Cena da bandeira
+@export var hero_scene: PackedScene  # Cena do herói
 
 # =========================
 # VARIÁVEIS INTERNAS
 # =========================
 var kill_count: int = 0
 var boss_spawned: bool = false
+var flag_spawned: bool = false
 var upgrade_screen: CanvasLayer = null
+var hero: Node2D = null
 
-@onready var hero: Node2D = $hero
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var progress_bar: ProgressBar = $UI/BossProgress
 @onready var boss_label: Label = $UI/BossLabel
 @onready var spawn_area: Area2D = $Area2D
-@onready var spawn_col: CollisionShape2D = $Area2D/"Spawn - CollisionShape2D"
+@onready var spawn_col: CollisionShape2D = $"Area2D/Spawn - CollisionShape2D"
+@onready var hero_spawn_point: Marker2D = $HeroSpawnPoint if has_node("HeroSpawnPoint") else null
+
 
 func _ready() -> void:
 	randomize()
+	
+	# Spawna o herói
+	_spawn_hero()
 	
 	# Carrega dados do resource se disponível
 	if level_data:
@@ -66,7 +74,7 @@ func _ready() -> void:
 	spawn_timer.start()
 
 func _on_spawn_timer_timeout() -> void:
-	if boss_spawned:
+	if boss_spawned or flag_spawned:
 		return
 	if enemy_scenes.is_empty():
 		return
@@ -148,6 +156,64 @@ func _on_enemy_died(_enemy: Node, is_boss: bool) -> void:
 func _on_boss_defeated() -> void:
 	boss_label.text = "BOSS DERROTADO!"
 	await get_tree().create_timer(1.0).timeout
+	_spawn_flag()
+
+func _spawn_flag() -> void:
+	if not flag_scene or not hero:
+		_show_upgrade_screen()
+		return
+	
+	flag_spawned = true
+	
+	# Encontra uma posição aleatória longe do herói
+	var flag_position = _get_flag_spawn_position()
+	
+	var flag = flag_scene.instantiate()
+	flag.global_position = flag_position
+	flag.flag_touched.connect(_on_flag_touched)
+	get_tree().current_scene.add_child(flag)
+
+func _get_flag_spawn_position() -> Vector2:
+	if not hero:
+		return Vector2.ZERO
+	
+	# Tenta spawnar longe do herói (mínimo 200 pixels)
+	const MIN_DISTANCE = 200.0
+	const MAX_DISTANCE = 400.0
+	
+	for _i in range(20):
+		var angle = randf() * TAU
+		var distance = randf_range(MIN_DISTANCE, MAX_DISTANCE)
+		var offset = Vector2(cos(angle), sin(angle)) * distance
+		var pos = hero.global_position + offset
+		
+		# Verifica se está dentro da área de spawn
+		if _is_position_in_spawn_area(pos):
+			return pos
+	
+	# Fallback: apenas longe do herói
+	var angle = randf() * TAU
+	return hero.global_position + Vector2(cos(angle), sin(angle)) * MIN_DISTANCE
+
+func _is_position_in_spawn_area(pos: Vector2) -> bool:
+	if not spawn_col or not spawn_col.shape:
+		return true
+	
+	var shape = spawn_col.shape
+	var local_pos = spawn_col.global_transform.affine_inverse() * pos
+	
+	if shape is RectangleShape2D:
+		var rect = shape as RectangleShape2D
+		var half_size = rect.size * 0.5
+		return abs(local_pos.x) <= half_size.x and abs(local_pos.y) <= half_size.y
+	elif shape is CircleShape2D:
+		var circle = shape as CircleShape2D
+		return local_pos.length() <= circle.radius
+	
+	return true
+
+func _on_flag_touched() -> void:
+	flag_spawned = false
 	_show_upgrade_screen()
 
 func _show_upgrade_screen() -> void:
@@ -215,3 +281,26 @@ func _spawn_boss() -> void:
 
 	get_tree().current_scene.call_deferred("add_child", boss)
 	spawn_timer.stop()
+
+func _spawn_hero() -> void:
+	# Se o hero_scene não foi configurado, tenta carregar o padrão
+	if not hero_scene:
+		hero_scene = load("res://characters/hero.tscn")
+	
+	if not hero_scene:
+		push_warning("Hero scene não configurada!")
+		return
+	
+	hero = hero_scene.instantiate()
+	
+	# Define a posição inicial
+	if hero_spawn_point:
+		hero.global_position = hero_spawn_point.global_position
+	else:
+		# Posição padrão no centro da área de spawn
+		if spawn_area:
+			hero.global_position = spawn_area.global_position
+		else:
+			hero.global_position = Vector2.ZERO
+	
+	get_tree().current_scene.add_child(hero)
