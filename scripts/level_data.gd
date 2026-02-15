@@ -11,8 +11,8 @@ class_name LevelData
 # CONFIGURAÇÕES DE SPAWN
 # =========================
 @export var enemy_scenes: Array[PackedScene] = []  # Inimigos que podem aparecer
-@export var spawn_interval: float = 4.0
-@export var max_enemies: int = 6
+@export var spawn_interval: float = 1.0
+@export var max_enemies: int = 15
 @export var kills_for_boss: int = 10
 
 # =========================

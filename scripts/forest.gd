@@ -1,5 +1,1 @@
 extends LevelManager
-
-# Este script pode ser usado para adicionar comportamentos 
-# específicos da fase Forest, se necessário no futuro
-# Por enquanto, apenas herda do LevelManager genérico

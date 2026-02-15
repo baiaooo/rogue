@@ -31,7 +31,6 @@ var upgrade_screen: CanvasLayer = null
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var progress_bar: ProgressBar = $UI/BossProgress
 @onready var boss_label: Label = $UI/BossLabel
-
 @onready var spawn_area: Area2D = $Area2D
 @onready var spawn_col: CollisionShape2D = $Area2D/"Spawn - CollisionShape2D"
 
