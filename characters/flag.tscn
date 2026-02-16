@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3m7k8j9p2n5t"]
+[gd_scene format=3 uid="uid://b3m7k8kap2n5t"]
 
 [ext_resource type="Script" path="res://scripts/flag.gd" id="1_flag"]
 [ext_resource type="Texture2D" uid="uid://ca3d17e5d6c67358e7d97b9307bfb4b1d328312e" path="res://sprites/decoration/tile505.png" id="2_flag"]
