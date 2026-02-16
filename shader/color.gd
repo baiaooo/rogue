@@ -7,12 +7,6 @@ extends ColorRect
 @onready var mat := material as ShaderMaterial
 var cam: Camera2D
 
-func _ready() -> void:
-	cam = get_viewport().get_camera_2d()
-	if cam == null:
-		push_error("Overlay CRT: nenhuma Camera2D current encontrada.")
-		set_process(false)
-
 func _process(_delta: float) -> void:
 	# Centro da câmera em coordenadas de mundo (normalmente pixels em jogos 2D)
 	var c := cam.get_screen_center_position()
