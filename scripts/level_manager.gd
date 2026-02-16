@@ -34,6 +34,7 @@ var hero: Node2D = null
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var progress_bar: ProgressBar = $UI/BossProgress
 @onready var boss_label: Label = $UI/BossLabel
+@onready var stage_label: Label = $UI/StageLabel if has_node("UI/StageLabel") else null
 @onready var spawn_area: Area2D = $Area2D
 @onready var spawn_col: CollisionShape2D = $"Area2D/Spawn - CollisionShape2D"
 @onready var hero_spawn_point: Marker2D = $HeroSpawnPoint if has_node("HeroSpawnPoint") else null
@@ -44,6 +45,9 @@ func _ready() -> void:
 	
 	# Spawna o herói
 	_spawn_hero()
+	
+	# Marca avanço da fase atual
+	var current_level_number = GameGlobals.advance_level_counter()
 	
 	# Carrega dados do resource se disponível
 	if level_data:
@@ -64,6 +68,7 @@ func _ready() -> void:
 	progress_bar.max_value = kills_for_boss
 	progress_bar.value = 0
 	boss_label.visible = false
+	_update_stage_label(current_level_number)
 
 	for existing_enemy in get_tree().get_nodes_in_group("enemy"):
 		if existing_enemy.has_signal("died"):
@@ -72,6 +77,14 @@ func _ready() -> void:
 	spawn_timer.wait_time = spawn_interval
 	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
 	spawn_timer.start()
+
+
+func _update_stage_label(level_number: int) -> void:
+	if not stage_label:
+		return
+
+	var stage_name = level_data.level_name if level_data and not level_data.level_name.is_empty() else get_tree().current_scene.name
+	stage_label.text = "%s - Nível %d" % [stage_name, level_number]
 
 func _on_spawn_timer_timeout() -> void:
 	if boss_spawned or flag_spawned:
@@ -170,8 +183,9 @@ func _spawn_flag() -> void:
 	
 	var flag = flag_scene.instantiate()
 	flag.global_position = flag_position
-	flag.flag_touched.connect(_on_flag_touched)
-	get_tree().current_scene.add_child(flag)
+	if flag.has_signal("flag_touched"):
+		flag.flag_touched.connect(_on_flag_touched)
+	get_tree().current_scene.call_deferred("add_child", flag)
 
 func _get_flag_spawn_position() -> Vector2:
 	if not hero:

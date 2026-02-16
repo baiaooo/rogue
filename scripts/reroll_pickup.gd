@@ -18,9 +18,12 @@ var bob_time: float = 0.0
 var initial_y: float = 0.0
 
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
+@onready var pickup_name_label: Label = $PickupName if has_node("PickupName") else null
 
 func _ready() -> void:
 	initial_y = position.y
+	if pickup_name_label:
+		pickup_name_label.text = "Reroll"
 	body_entered.connect(_on_body_entered)
 
 func _physics_process(delta: float) -> void:

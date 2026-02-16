@@ -11,6 +11,7 @@ var reroll_pickup_scene: PackedScene
 # =========================
 var available_levels: Array[PackedScene] = []
 var current_level_data: LevelData = null
+var current_level_number: int = 0
 
 func _ready() -> void:
 	# Carrega as cenas de pickup
@@ -38,3 +39,10 @@ func get_next_level(from_level_data: LevelData = null) -> PackedScene:
 	
 	# Caso contrário, retorna uma fase aleatória
 	return get_random_level()
+
+func start_new_run() -> void:
+	current_level_number = 0
+
+func advance_level_counter() -> int:
+	current_level_number += 1
+	return current_level_number
