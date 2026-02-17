@@ -1,32 +1,32 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3m7k8j9p2n5t"]
+[gd_scene format=3 uid="uid://b3m7k8kap2n5t"]
 
-[ext_resource type="Script" path="res://scripts/flag.gd" id="1_flag"]
-[ext_resource type="Texture2D" uid="uid://dhcw47cuia2gi" path="res://sprites/decoration/tile505.png" id="2_flag"]
+[ext_resource type="Script" uid="uid://bdatfij2c4kwn" path="res://scripts/flag.gd" id="1_flag"]
+[ext_resource type="Texture2D" uid="uid://bhw0jqh6ib0vv" path="res://sprites/decoration/tile738.png" id="2_og1pq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_flag"]
 radius = 30.0
 
-[node name="Flag" type="Area2D"]
+[node name="Flag" type="Area2D" unique_id=1778729398]
 collision_layer = 8
 collision_mask = 2
 script = ExtResource("1_flag")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0.8, 0, 1)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1303919437]
+modulate = Color(1, 1, 0, 1)
 scale = Vector2(2, 2)
-texture = ExtResource("2_flag")
+texture = ExtResource("2_og1pq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1237175716]
 shape = SubResource("CircleShape2D_flag")
 
-[node name="Label" type="Label" parent="."]
-offset_left = -60.0
-offset_top = -50.0
-offset_right = 60.0
-offset_bottom = -30.0
+[node name="Label" type="Label" parent="." unique_id=309468369]
+offset_left = -57.0
+offset_top = -26.0
+offset_right = 63.0
+offset_bottom = -6.0
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
-text = "🚩 PRÓXIMA FASE"
+theme_override_font_sizes/font_size = 10
+text = "NEXT LEVEL"
 horizontal_alignment = 1

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d4kllcp381fg7" path="res://scripts/hero.gd" id="1_0cirb"]
 [ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/projectile.tscn" id="2_hsbtt"]
-[ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="2_t4k1q"]
+[ext_resource type="Texture2D" uid="uid://dgrm4qyxostt4" path="res://sprites/characters/soldier.png" id="3_t4k1q"]
 
 [sub_resource type="Gradient" id="Gradient_0vf67"]
 offsets = PackedFloat32Array(0, 0.46385542)
@@ -44,7 +44,7 @@ projectile_scene = ExtResource("2_hsbtt")
 texture = SubResource("GradientTexture2D_c8mnq")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=535937241]
-texture = ExtResource("2_t4k1q")
+texture = ExtResource("3_t4k1q")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=972472242]
 shape = SubResource("RectangleShape2D_ffp7p")

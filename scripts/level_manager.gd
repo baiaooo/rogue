@@ -73,8 +73,6 @@ func _ready() -> void:
 		push_warning("LevelManager: nó 'UI/BossProgress' não encontrado na cena.")
 	
 	if boss_label:
-		boss_label.visible = false
-	else:
 		push_warning("LevelManager: nó 'UI/BossLabel' não encontrado na cena.")
 	
 	if not spawn_area:

@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://dp35p5gq0p2k5"]
 
 [ext_resource type="Script" uid="uid://djl0cu0a6m4ul" path="res://scripts/projectile.gd" id="1_mj0s2"]
-[ext_resource type="Texture2D" uid="uid://lo6ckxb4qdgy" path="res://sprites/weapons/tile228.png" id="2_o8k1h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0e1uv"]
-size = Vector2(5, 4)
+size = Vector2(4, 4)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_sr22r"]
 
 [node name="Projectile" type="Area2D" unique_id=905195119]
 collision_layer = 8
@@ -15,7 +16,6 @@ script = ExtResource("1_mj0s2")
 shape = SubResource("RectangleShape2D_0e1uv")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1593160951]
-position = Vector2(4.7683716e-07, 0)
 rotation = 0.77216774
-scale = Vector2(0.375, 0.375)
-texture = ExtResource("2_o8k1h")
+scale = Vector2(2.658671, 2.658671)
+texture = SubResource("CanvasTexture_sr22r")
