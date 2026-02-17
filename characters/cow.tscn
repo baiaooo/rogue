@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://nl1eviyp2itw"]
 
-[ext_resource type="Script" uid="uid://d13k3rc8tu7ao" path="res://scripts/enemy.gd" id="1_t8fki"]
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_t8fki"]
 [ext_resource type="Resource" path="res://resources/enemies/cow_data.tres" id="2_cow"]
-[ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/projectile.tscn" id="2_t8qks"]
-[ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="3_unut8"]
+[ext_resource type="PackedScene" path="res://characters/projectile.tscn" id="2_t8qks"]
+[ext_resource type="Texture2D" path="res://sprites/critter/tile370.png" id="3_unut8"]
 
 [sub_resource type="Gradient" id="Gradient_0vf67"]
 offsets = PackedFloat32Array(0, 0.46385542)

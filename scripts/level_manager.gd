@@ -31,9 +31,9 @@ var flag_spawned: bool = false
 var upgrade_screen: CanvasLayer = null
 var hero: Node2D = null
 
-@onready var spawn_timer: Timer = $SpawnTimer
-@onready var progress_bar: ProgressBar = $UI/BossProgress
-@onready var boss_label: Label = $UI/BossLabel
+@onready var spawn_timer: Timer = get_node_or_null("SpawnTimer")
+@onready var progress_bar: ProgressBar = get_node_or_null("UI/BossProgress")
+@onready var boss_label: Label = get_node_or_null("UI/BossLabel")
 @onready var stage_label: Label = $UI/StageLabel if has_node("UI/StageLabel") else null
 @onready var spawn_area: Area2D = $Area2D
 @onready var spawn_col: CollisionShape2D = $"Area2D/Spawn - CollisionShape2D"
@@ -42,6 +42,7 @@ var hero: Node2D = null
 
 func _ready() -> void:
 	randomize()
+	_validate_scene_nodes()
 	
 	# Spawna o herói
 	_spawn_hero()
@@ -51,7 +52,7 @@ func _ready() -> void:
 	
 	# Carrega dados do resource se disponível
 	if level_data:
-		if not enemy_scenes.is_empty():
+		if not level_data.enemy_scenes.is_empty():
 			enemy_scenes = level_data.enemy_scenes
 		spawn_interval = level_data.spawn_interval
 		max_enemies = level_data.max_enemies
@@ -65,18 +66,34 @@ func _ready() -> void:
 		# Armazena no GameGlobals para transição de fase
 		GameGlobals.current_level_data = level_data
 	
-	progress_bar.max_value = kills_for_boss
-	progress_bar.value = 0
-	boss_label.visible = false
+	if progress_bar:
+		progress_bar.max_value = kills_for_boss
+		progress_bar.value = 0
+	if boss_label:
+		boss_label.visible = false
 	_update_stage_label(current_level_number)
 
 	for existing_enemy in get_tree().get_nodes_in_group("enemy"):
 		if existing_enemy.has_signal("died"):
 			existing_enemy.died.connect(_on_enemy_died)
 
-	spawn_timer.wait_time = spawn_interval
-	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
-	spawn_timer.start()
+	if spawn_timer:
+		spawn_timer.wait_time = spawn_interval
+		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
+		spawn_timer.start()
+
+
+func _validate_scene_nodes() -> void:
+	if not progress_bar:
+		push_warning("LevelManager: nó 'UI/BossProgress' não encontrado na cena.")
+	if not boss_label:
+		push_warning("LevelManager: nó 'UI/BossLabel' não encontrado na cena.")
+	if not spawn_area:
+		push_warning("LevelManager: nó 'Area2D' não encontrado na cena.")
+	if not spawn_col:
+		push_warning("LevelManager: nó 'Area2D/Spawn - CollisionShape2D' não encontrado na cena.")
+	if not spawn_timer:
+		push_warning("LevelManager: nó 'SpawnTimer' não encontrado! Inimigos não vão spawnar.")
 
 
 func _update_stage_label(level_number: int) -> void:
@@ -161,13 +178,15 @@ func _on_enemy_died(_enemy: Node, is_boss: bool) -> void:
 		return
 
 	kill_count += 1
-	progress_bar.value = min(kill_count, kills_for_boss)
+	if progress_bar:
+		progress_bar.value = min(kill_count, kills_for_boss)
 
 	if kill_count >= kills_for_boss and not boss_spawned:
 		_spawn_boss()
 
 func _on_boss_defeated() -> void:
-	boss_label.text = "BOSS DERROTADO!"
+	if boss_label:
+		boss_label.text = "BOSS DERROTADO!"
 	await get_tree().create_timer(1.0).timeout
 	_spawn_flag()
 
@@ -269,7 +288,8 @@ func _go_to_next_level() -> void:
 
 func _spawn_boss() -> void:
 	boss_spawned = true
-	boss_label.visible = true
+	if boss_label:
+		boss_label.visible = true
 	if enemy_scenes.is_empty():
 		return
 
@@ -294,7 +314,8 @@ func _spawn_boss() -> void:
 		boss.died.connect(_on_enemy_died)
 
 	get_tree().current_scene.call_deferred("add_child", boss)
-	spawn_timer.stop()
+	if spawn_timer:
+		spawn_timer.stop()
 
 func _spawn_hero() -> void:
 	# Se o hero_scene não foi configurado, tenta carregar o padrão

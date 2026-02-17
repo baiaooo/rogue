@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://pkdqhaxvgf6u"]
 
-[ext_resource type="Script" uid="uid://rsm0jsm17qb0" path="res://scripts/reroll_pickup.gd" id="1_reroll"]
-[ext_resource type="Texture2D" uid="uid://di06ko1siwu52" path="res://sprites/critter/tile372.png" id="2_otmf2"]
+[ext_resource type="Script" path="res://scripts/reroll_pickup.gd" id="1_reroll"]
+[ext_resource type="Texture2D" path="res://sprites/critter/tile372.png" id="2_otmf2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_reroll"]
 radius = 8.0
