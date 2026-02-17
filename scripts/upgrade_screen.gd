@@ -102,12 +102,12 @@ func _create_upgrade_button(upgrade: Dictionary, index: int) -> void:
 	container.add_theme_constant_override("separation", 5)
 	
 	# Adiciona o título
-	var title_label = Label.new()
-	title_label.text = upgrade.icon + " " + upgrade.name
-	title_label.add_theme_font_size_override("font_size", 22)
-	title_label.add_theme_color_override("font_color", Color(1, 0.9, 0))
-	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	container.add_child(title_label)
+	var option_title = Label.new()
+	option_title.text = upgrade.icon + " " + upgrade.name
+	option_title.add_theme_font_size_override("font_size", 22)
+	option_title.add_theme_color_override("font_color", Color(1, 0.9, 0))
+	option_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	container.add_child(option_title)
 	
 	# Cria o botão com apenas a descrição
 	var button = Button.new()

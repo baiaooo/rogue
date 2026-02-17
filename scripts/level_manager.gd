@@ -31,12 +31,13 @@ var flag_spawned: bool = false
 var upgrade_screen: CanvasLayer = null
 var hero: Node2D = null
 
-@onready var spawn_timer: Timer = $SpawnTimer
-@onready var progress_bar: ProgressBar = $UI/BossProgress
-@onready var boss_label: Label = $UI/BossLabel
-@onready var spawn_area: Area2D = $Area2D
-@onready var spawn_col: CollisionShape2D = $"Area2D/Spawn - CollisionShape2D"
-@onready var hero_spawn_point: Marker2D = $HeroSpawnPoint if has_node("HeroSpawnPoint") else null
+@onready var spawn_timer: Timer = get_node_or_null("SpawnTimer")
+@onready var progress_bar: ProgressBar = get_node_or_null("UI/BossProgress")
+@onready var boss_label: Label = get_node_or_null("UI/BossLabel")
+@onready var stage_label: Label = get_node_or_null("UI/StageLabel")
+@onready var spawn_area: Area2D = get_node_or_null("Area2D")
+@onready var spawn_col: CollisionShape2D = get_node_or_null("Area2D/Spawn - CollisionShape2D")
+@onready var hero_spawn_point: Marker2D = get_node_or_null("HeroSpawnPoint")
 
 
 func _ready() -> void:
@@ -44,6 +45,9 @@ func _ready() -> void:
 	
 	# Spawna o herói
 	_spawn_hero()
+	
+	# Marca avanço da fase atual
+	var current_level_number = GameGlobals.advance_level_counter()
 	
 	# Carrega dados do resource se disponível
 	if level_data:
@@ -61,17 +65,42 @@ func _ready() -> void:
 		# Armazena no GameGlobals para transição de fase
 		GameGlobals.current_level_data = level_data
 	
-	progress_bar.max_value = kills_for_boss
-	progress_bar.value = 0
-	boss_label.visible = false
+	if progress_bar:
+		progress_bar.max_value = kills_for_boss
+		progress_bar.value = 0
+	else:
+		push_warning("LevelManager: nó 'UI/BossProgress' não encontrado na cena.")
+	
+	if boss_label:
+		boss_label.visible = false
+	else:
+		push_warning("LevelManager: nó 'UI/BossLabel' não encontrado na cena.")
+	
+	if not spawn_area:
+		push_warning("LevelManager: nó 'Area2D' não encontrado na cena.")
+	if not spawn_col:
+		push_warning("LevelManager: nó 'Area2D/Spawn - CollisionShape2D' não encontrado na cena.")
+	
+	_update_stage_label(current_level_number)
 
 	for existing_enemy in get_tree().get_nodes_in_group("enemy"):
 		if existing_enemy.has_signal("died"):
 			existing_enemy.died.connect(_on_enemy_died)
 
-	spawn_timer.wait_time = spawn_interval
-	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
-	spawn_timer.start()
+	if spawn_timer:
+		spawn_timer.wait_time = spawn_interval
+		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
+		spawn_timer.start()
+	else:
+		push_error("LevelManager: nó 'SpawnTimer' não encontrado! Inimigos não vão spawnar.")
+
+
+func _update_stage_label(level_number: int) -> void:
+	if not stage_label:
+		return
+
+	var stage_name = level_data.level_name if level_data and not level_data.level_name.is_empty() else get_tree().current_scene.name
+	stage_label.text = "%s - Nível %d" % [stage_name, level_number]
 
 func _on_spawn_timer_timeout() -> void:
 	if boss_spawned or flag_spawned:
@@ -148,13 +177,15 @@ func _on_enemy_died(_enemy: Node, is_boss: bool) -> void:
 		return
 
 	kill_count += 1
-	progress_bar.value = min(kill_count, kills_for_boss)
+	if progress_bar:
+		progress_bar.value = min(kill_count, kills_for_boss)
 
 	if kill_count >= kills_for_boss and not boss_spawned:
 		_spawn_boss()
 
 func _on_boss_defeated() -> void:
-	boss_label.text = "BOSS DERROTADO!"
+	if boss_label:
+		boss_label.text = "BOSS DERROTADO!"
 	await get_tree().create_timer(1.0).timeout
 	_spawn_flag()
 
@@ -170,8 +201,9 @@ func _spawn_flag() -> void:
 	
 	var flag = flag_scene.instantiate()
 	flag.global_position = flag_position
-	flag.flag_touched.connect(_on_flag_touched)
-	get_tree().current_scene.add_child(flag)
+	if flag.has_signal("flag_touched"):
+		flag.flag_touched.connect(_on_flag_touched)
+	get_tree().current_scene.call_deferred("add_child", flag)
 
 func _get_flag_spawn_position() -> Vector2:
 	if not hero:
@@ -192,8 +224,8 @@ func _get_flag_spawn_position() -> Vector2:
 			return pos
 	
 	# Fallback: apenas longe do herói
-	var angle = randf() * TAU
-	return hero.global_position + Vector2(cos(angle), sin(angle)) * MIN_DISTANCE
+	var fallback_angle = randf() * TAU
+	return hero.global_position + Vector2(cos(fallback_angle), sin(fallback_angle)) * MIN_DISTANCE
 
 func _is_position_in_spawn_area(pos: Vector2) -> bool:
 	if not spawn_col or not spawn_col.shape:
@@ -255,7 +287,8 @@ func _go_to_next_level() -> void:
 
 func _spawn_boss() -> void:
 	boss_spawned = true
-	boss_label.visible = true
+	if boss_label:
+		boss_label.visible = true
 	if enemy_scenes.is_empty():
 		return
 
