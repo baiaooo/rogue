@@ -2,11 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://bhqk4ld0hgqpf" path="res://tileset/colored-transparent_packed.png" id="2_gavr0"]
 [ext_resource type="PackedScene" uid="uid://b3wihdgl0302b" path="res://rooms/upgrade_screen.tscn" id="3_7kd8l"]
-[ext_resource type="PackedScene" uid="uid://b3dlo6vo1myhx" path="res://characters/cow.tscn" id="4_5kmay"]
+[ext_resource type="PackedScene" uid="uid://nl1eviyp2itw" path="res://characters/cow.tscn" id="4_5kmay"]
 [ext_resource type="Script" uid="uid://b20je3oxrihhi" path="res://scripts/forest.gd" id="5_forest"]
 [ext_resource type="PackedScene" uid="uid://dund3rfvhpkft" path="res://characters/hero.tscn" id="6_hero"]
 [ext_resource type="PackedScene" uid="uid://col8b26jeag60" path="res://rooms/level_manager.tscn" id="7_3brsr"]
-[ext_resource type="PackedScene" uid="uid://b3m7k8kap2n5t" path="res://characters/flag.tscn" id="7_flag"]
+[ext_resource type="PackedScene" uid="uid://b3m7k8j9p2n5t" path="res://characters/flag.tscn" id="7_flag"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3hu5c"]
 texture = ExtResource("2_gavr0")

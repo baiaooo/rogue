@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dund3rfvhpkft"]
 
-[ext_resource type="Script" uid="uid://h4etgne4bnsx" path="res://scripts/hero.gd" id="1_0cirb"]
+[ext_resource type="Script" uid="uid://d4kllcp381fg7" path="res://scripts/hero.gd" id="1_0cirb"]
 [ext_resource type="PackedScene" uid="uid://dp35p5gq0p2k5" path="res://characters/projectile.tscn" id="2_hsbtt"]
 [ext_resource type="Texture2D" uid="uid://bd1tkj6718xk5" path="res://sprites/critter/tile370.png" id="2_t4k1q"]
 

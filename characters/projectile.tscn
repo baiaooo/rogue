@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dp35p5gq0p2k5"]
 
-[ext_resource type="Script" uid="uid://duumdnst41t24" path="res://scripts/projectile.gd" id="1_mj0s2"]
+[ext_resource type="Script" uid="uid://djl0cu0a6m4ul" path="res://scripts/projectile.gd" id="1_mj0s2"]
 [ext_resource type="Texture2D" uid="uid://lo6ckxb4qdgy" path="res://sprites/weapons/tile228.png" id="2_o8k1h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0e1uv"]

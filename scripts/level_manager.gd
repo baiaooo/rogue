@@ -31,16 +31,17 @@ var flag_spawned: bool = false
 var upgrade_screen: CanvasLayer = null
 var hero: Node2D = null
 
-@onready var spawn_timer: Timer = get_node_or_null("SpawnTimer")
-@onready var progress_bar: ProgressBar = get_node_or_null("UI/BossProgress")
-@onready var boss_label: Label = get_node_or_null("UI/BossLabel")
-@onready var stage_label: Label = get_node_or_null("UI/StageLabel")
-@onready var spawn_area: Area2D = get_node_or_null("Area2D")
-@onready var spawn_col: CollisionShape2D = get_node_or_null("Area2D/Spawn - CollisionShape2D")
-@onready var hero_spawn_point: Marker2D = get_node_or_null("HeroSpawnPoint")
+var spawn_timer: Timer = null
+var progress_bar: ProgressBar = null
+var boss_label: Label = null
+var stage_label: Label = null
+var spawn_area: Area2D = null
+var spawn_col: CollisionShape2D = null
+var hero_spawn_point: Marker2D = null
 
 
 func _ready() -> void:
+	_cache_scene_nodes()
 	randomize()
 	
 	# Spawna o herói
@@ -93,6 +94,28 @@ func _ready() -> void:
 		spawn_timer.start()
 	else:
 		push_error("LevelManager: nó 'SpawnTimer' não encontrado! Inimigos não vão spawnar.")
+
+
+func _cache_scene_nodes() -> void:
+	spawn_timer = _find_first_node(["SpawnTimer", "LevelManager/SpawnTimer"]) as Timer
+	progress_bar = _find_first_node(["UI/BossProgress", "LevelManager/UI/BossProgress"]) as ProgressBar
+	boss_label = _find_first_node(["UI/BossLabel", "LevelManager/UI/BossLabel"]) as Label
+	stage_label = _find_first_node(["UI/StageLabel", "LevelManager/UI/StageLabel"]) as Label
+	spawn_area = _find_first_node(["Area2D", "Spawn Area"]) as Area2D
+	spawn_col = _find_first_node([
+		"Area2D/Spawn - CollisionShape2D",
+		"Area2D/Spawn",
+		"Spawn Area/Spawn"
+	]) as CollisionShape2D
+	hero_spawn_point = _find_first_node(["HeroSpawnPoint", "HeroSpawn"]) as Marker2D
+
+
+func _find_first_node(paths: Array[String]) -> Node:
+	for p in paths:
+		var node = get_node_or_null(p)
+		if node:
+			return node
+	return null
 
 
 func _update_stage_label(level_number: int) -> void:
