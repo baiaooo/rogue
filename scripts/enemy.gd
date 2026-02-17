@@ -124,11 +124,11 @@ func _behavior_chase_and_shoot(delta: float) -> void:
 	if distance_to_player <= shoot_range and can_shoot:
 		_shoot_at_player()
 
-func _behavior_melee_only(delta: float) -> void:
+func _behavior_melee_only(_delta: float) -> void:
 	# Sempre persegue, não atira
-	_chase_player(delta)
+	_chase_player(_delta)
 
-func _behavior_stationary_shooter(delta: float) -> void:
+func _behavior_stationary_shooter(_delta: float) -> void:
 	# Fica parado, apenas atira
 	velocity = Vector2.ZERO
 	var distance_to_player = global_position.distance_to(player.global_position)
@@ -139,7 +139,7 @@ func _behavior_stationary_shooter(delta: float) -> void:
 # =========================
 # SISTEMA DE PERSEGUIÇÃO
 # =========================
-func _chase_player(delta: float) -> void:
+func _chase_player(_delta: float) -> void:
 	# Calcula a direção até o player
 	var direction = (player.global_position - global_position).normalized()
 	

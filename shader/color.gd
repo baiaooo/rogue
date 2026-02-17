@@ -7,7 +7,15 @@ extends ColorRect
 @onready var mat := material as ShaderMaterial
 var cam: Camera2D
 
+func _ready() -> void:
+	# Busca a câmera 2D ativa no viewport
+	cam = get_viewport().get_camera_2d()
+
 func _process(_delta: float) -> void:
+	# Garante que a câmera existe (pode ter mudado de cena)
+	if not cam or not is_instance_valid(cam):
+		cam = get_viewport().get_camera_2d()
+		return
 	# Centro da câmera em coordenadas de mundo (normalmente pixels em jogos 2D)
 	var c := cam.get_screen_center_position()
 
